@@ -79,7 +79,6 @@
             // Automatically switch to default channel if not set to default
             if (!IsDefaultChannel)
             {
-                App.Logger.WriteLine(LOG_IDENT, "Channel is not default, switching to default.");
                 Channel = DefaultChannel;  // Switch back to default channel
             }
 
@@ -117,7 +116,6 @@
             // Automatically switch to default channel if it's not
             if (!IsDefaultChannel)
             {
-                App.Logger.WriteLine("Channel is not default, switching to default.");
                 Channel = DefaultChannel;  // Switch back to default channel
             }
 
@@ -149,7 +147,6 @@
             // Automatically switch to default channel if the provided channel is not the default
             if (String.Compare(channel, DefaultChannel, StringComparison.OrdinalIgnoreCase) != 0)
             {
-                App.Logger.WriteLine(LOG_IDENT, "Channel is not default, switching to default.");
                 channel = DefaultChannel;  // Switch back to default channel
             }
 
