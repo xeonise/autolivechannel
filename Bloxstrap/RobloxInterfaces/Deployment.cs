@@ -6,7 +6,7 @@
         
         private const string VersionStudioHash = "version-012732894899482c";
 
-        public static string Channel = DefaultChannel;
+        public static string Channel = DefaultChannel;  // Ensure the default is set initially
 
         public static string BinaryType = "WindowsPlayer";
 
@@ -23,8 +23,6 @@
 
         private static readonly Dictionary<string, ClientVersion> ClientVersionCache = new();
 
-        // a list of roblox deployment locations that we check for, in case one of them don't work
-        // these are all weighted based on their priority, so that we pick the most optimal one that we can. 0 = highest
         private static readonly Dictionary<string, int> BaseUrls = new()
         {
             { "https://setup.rbxcdn.com", 0 },
@@ -48,8 +46,6 @@
 
                 response.EnsureSuccessStatusCode();
 
-                // versionStudio is the version hash for the last MFC studio to be deployed.
-                // the response body should always be "version-012732894899482c".
                 string content = await response.Content.ReadAsStringAsync(token);
 
                 if (content != VersionStudioHash)
@@ -69,11 +65,6 @@
             return url;
         }
 
-        /// <summary>
-        /// This function serves double duty as the setup mirror enumerator, and as our connectivity check.
-        /// Returns null for success.
-        /// </summary>
-        /// <returns></returns>
         public static async Task<Exception?> InitializeConnectivity()
         {
             const string LOG_IDENT = "Deployment::InitializeConnectivity";
@@ -84,6 +75,13 @@
             var tasks = (from entry in BaseUrls select TestConnection(entry.Key, entry.Value, tokenSource.Token)).ToList();
 
             App.Logger.WriteLine(LOG_IDENT, "Testing connectivity...");
+
+            // Automatically switch to default channel if not set to default
+            if (!IsDefaultChannel)
+            {
+                App.Logger.WriteLine(LOG_IDENT, "Channel is not default, switching to default.");
+                Channel = DefaultChannel;  // Switch back to default channel
+            }
 
             while (tasks.Any() && String.IsNullOrEmpty(BaseUrl))
             {
@@ -97,7 +95,6 @@
                     BaseUrl = finishedTask.Result;
             }
 
-            // stop other running connectivity tests
             tokenSource.Cancel();
 
             if (string.IsNullOrEmpty(BaseUrl))
@@ -105,7 +102,6 @@
                 if (exceptions.Any())
                     return exceptions[0];
 
-                // task cancellation exceptions don't get added to the list
                 return new TaskCanceledException("All connection attempts timed out.");
             }
 
@@ -117,6 +113,13 @@
         public static string GetLocation(string resource)
         {
             string location = BaseUrl;
+
+            // Automatically switch to default channel if it's not
+            if (!IsDefaultChannel)
+            {
+                App.Logger.WriteLine("Channel is not default, switching to default.");
+                Channel = DefaultChannel;  // Switch back to default channel
+            }
 
             if (!IsDefaultChannel)
             {
@@ -139,8 +142,16 @@
         {
             const string LOG_IDENT = "Deployment::GetInfo";
 
+            // If no channel is provided, use the current Channel or the DefaultChannel
             if (String.IsNullOrEmpty(channel))
                 channel = Channel;
+
+            // Automatically switch to default channel if the provided channel is not the default
+            if (String.Compare(channel, DefaultChannel, StringComparison.OrdinalIgnoreCase) != 0)
+            {
+                App.Logger.WriteLine(LOG_IDENT, "Channel is not default, switching to default.");
+                channel = DefaultChannel;  // Switch back to default channel
+            }
 
             bool isDefaultChannel = String.Compare(channel, DefaultChannel, StringComparison.OrdinalIgnoreCase) == 0;
 
