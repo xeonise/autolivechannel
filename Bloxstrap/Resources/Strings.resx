@@ -151,8 +151,8 @@
     <value>Installing WebView2, please wait...</value>
   </data>
   <data name="Bootstrapper.Status.Starting" xml:space="preserve">
-    <value>Starting {product}...</value>
-    <comment>"Starting Roblox {autolivechannel}" or "Starting Roblox Studio {autolivechannel}"</comment>
+    <value>Starting (autolivechannel) {product}...</value>
+    <comment>"Starting Roblox" or "Starting Roblox Studio"</comment>
   </data>
   <data name="Bootstrapper.Status.Upgrading" xml:space="preserve">
     <value>Upgrading {product}...</value>
