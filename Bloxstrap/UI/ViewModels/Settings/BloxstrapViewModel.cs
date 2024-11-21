@@ -16,7 +16,7 @@ namespace Bloxstrap.UI.ViewModels.Settings
         public bool AnalyticsEnabled
         {
             get => App.Settings.Prop.EnableAnalytics;
-            set => App.Settings.Prop.EnableAnalytics = value;
+            set => App.Settings.Prop.EnableAnalytics = false;
         }
 
         public bool ShouldExportConfig { get; set; } = true;
