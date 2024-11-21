@@ -154,7 +154,7 @@
     <value>Устанавливаем WebView2, пожалуйста, подождите...</value>
   </data>
   <data name="Bootstrapper.Status.Starting" xml:space="preserve">
-    <value>Запускаем {product}...</value>
+    <value>Запускаем (autolivechannel) {product}...</value>
     <comment>"Starting Roblox" or "Starting Roblox Studio"</comment>
   </data>
   <data name="Bootstrapper.Status.Upgrading" xml:space="preserve">
